@@ -1,0 +1,27 @@
+{
+  "name": "shu-var-negative",
+  "version": "1.0.0",
+  "description": "六爻排盤",
+  "main": "shu-var-negative.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/creatxrgithub/shu-var-negative.git"
+  },
+  "keywords": [
+    "易數",
+    "六爻",
+    "卜筮"
+  ],
+  "author": "creatxr",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/creatxrgithub/shu-var-negative/issues"
+  },
+  "homepage": "https://github.com/creatxrgithub/shu-var-negative#readme",
+  "devDependencies": {
+    "@types/node": "^18.11.9"
+  }
+}
