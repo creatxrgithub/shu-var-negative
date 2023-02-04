@@ -1,6 +1,6 @@
 {
   "name": "shu-var-negative",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "六爻排盤",
   "main": "shu-var-negative.js",
   "scripts": {

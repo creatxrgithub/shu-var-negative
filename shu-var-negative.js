@@ -17,14 +17,16 @@ var infoWuxingWidth = 5;
 //成數卽生數加五
 var infoWuxing = ['3', '木', '甲', '乙', '東', '2', '火', '南', '丙', '丁', '5', '土', '中', '戊', '己', '4', '金', '西', '庚', '辛', '1', '水', '北', '壬', '癸'];
 Object.freeze(infoWuxing); // js 中，數據使用 Object.freeze() 函數禁止更改
-var infoDizhiWidth = 3;
-var infoDizhi = ['子', '鼠', '水', '丑', '牛', '土', '寅', '虎', '木', '卯', '兔', '木', '辰', '龍', '土', '巳', '蛇', '火', '午', '馬', '火', '未', '羊', '土', '申', '猴', '金', '酉', '雞', '金', '戌', '狗', '土', '亥', '豬', '水'];
+//const infoDizhiWidth = 3;
+//const infoDizhi = ['子','鼠','水','丑','牛','土','寅','虎','木','卯','兔','木','辰','龍','土','巳','蛇','火','午','馬','火','未','羊','土','申','猴','金','酉','雞','金','戌','狗','土','亥','豬','水']; Object.freeze(infoDizhi);
+var infoDizhiWidth = 4; //第四位是地支循藏
+var infoDizhi = ['子', '鼠', '水', '癸', '丑', '牛', '土', '癸辛己', '寅', '虎', '木', '甲丙戊', '卯', '兔', '木', '乙', '辰', '龍', '土', '乙戊癸', '巳', '蛇', '火', '庚丙戊', '午', '馬', '火', '丁己', '未', '羊', '土', '乙己丁', '申', '猴', '金', '戊庚壬', '酉', '雞', '金', '辛', '戌', '狗', '土', '辛丁戊', '亥', '豬', '水', '甲壬'];
 Object.freeze(infoDizhi);
 var base8bits = [63, 9, 18, 36, 0, 54, 45, 27];
 Object.freeze(base8bits); //數值左起爲低位（初爻）
 var base8mask = [0, 32, 48, 56, 60, 62, 58, 2];
 Object.freeze(base8mask); //數值左起爲低位（初爻）
-var base8shiying = [[5, 2], [0, 3], [1, 4], [2, 5], [3, 0], [5, 2], [4, 1], [3, 0]];
+var base8shiying = [[5, 2], [0, 3], [1, 4], [2, 5], [3, 0], [5, 2], [3, 0], [2, 5]];
 Object.freeze(base8shiying); //世應在數組中的位置
 var base8name = ['乾爲天', '艮爲山', '坎爲水', '震爲雷', '坤爲地', '兌爲澤', '離爲火', '巽爲風'];
 Object.freeze(base8name);
@@ -206,6 +208,7 @@ function getListShen6(dayTiangan) {
  * 判斷任意干支是否在六十花甲中
  * 干支配是陽干配陽支，陰干配陰支，而且是完全匹配，干支差若得到奇數，則說明輸入的干支有誤
  * 由于數組是從零開始，所以上述公式改爲（地支+11-天干）%12-1
+ * 或 （地支+10-天干）%12
  */
 function getXunkong(value) {
     if (value === null)
@@ -213,7 +216,8 @@ function getXunkong(value) {
     var resultSub = dizhi.indexOf(value[1]) - tiangan.indexOf(value[0]); //沒有進行很嚴格的檢查
     if ((resultSub % 2) !== 0)
         return '干支有誤';
-    var offset = (resultSub + 11) % 12 - 1;
+    //let offset = (resultSub+11)%12-1;
+    var offset = (resultSub + 10) % 12;
     return "".concat(dizhi[offset]).concat(dizhi[offset + 1], "\u7A7A");
 }
 /**
