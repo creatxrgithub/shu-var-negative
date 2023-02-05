@@ -21,7 +21,7 @@ const infoDizhi = ['子','鼠','水','癸','丑','牛','土','癸辛己','寅','
 
 const base8bits = [0b111111,0b001001,0b010010,0b100100,0b000000,0b110110,0b101101,0b011011]; Object.freeze(base8bits);  //數值左起爲低位（初爻）
 const base8mask = [0b000000,0b100000,0b110000,0b111000,0b111100,0b111110,0b111010,0b000010]; Object.freeze(base8mask);  //數值左起爲低位（初爻）
-const base8shiying = [[5,2],[0,3],[1,4],[2,5],[3,0],[5,2],[3,0],[2,5]]; Object.freeze(base8shiying);  //世應在數組中的位置
+const base8shiying = [[5,2],[0,3],[1,4],[2,5],[3,0],[4,1],[3,0],[2,5]]; Object.freeze(base8shiying);  //世應在數組中的位置
 const base8name = ['乾爲天','艮爲山','坎爲水','震爲雷','坤爲地','兌爲澤','離爲火','巽爲風']; Object.freeze(base8name);
 const base8wuxing = ['金','土','水','木','土','金','火','木']; Object.freeze(base8wuxing);
 

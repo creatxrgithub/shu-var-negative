@@ -26,7 +26,7 @@ var base8bits = [63, 9, 18, 36, 0, 54, 45, 27];
 Object.freeze(base8bits); //數值左起爲低位（初爻）
 var base8mask = [0, 32, 48, 56, 60, 62, 58, 2];
 Object.freeze(base8mask); //數值左起爲低位（初爻）
-var base8shiying = [[5, 2], [0, 3], [1, 4], [2, 5], [3, 0], [5, 2], [3, 0], [2, 5]];
+var base8shiying = [[5, 2], [0, 3], [1, 4], [2, 5], [3, 0], [4, 1], [3, 0], [2, 5]];
 Object.freeze(base8shiying); //世應在數組中的位置
 var base8name = ['乾爲天', '艮爲山', '坎爲水', '震爲雷', '坤爲地', '兌爲澤', '離爲火', '巽爲風'];
 Object.freeze(base8name);
