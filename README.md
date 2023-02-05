@@ -15,7 +15,7 @@
 坎　2 010 -6 2 010
 艮　4 100 -7 1 001
 ```
-
+有象卽闕，問卜多憂。
 ```
 npm install shu-var-negative
 npm install chinese-calendar-indexer
@@ -68,7 +68,7 @@ class LogToStr {
 
 
 /**
- * 以時間起卦取數，取中國北京時間的年月日時的農曆日期，定應期也是以北京時間推算。
+ * 以時間取數起卦，取中國北京時間的年月日時的農曆日期，定應期也是以北京時間推算。
  * 根據經驗，以他國時間定卦，似頗不驗。
  */
 async function doPredictionByTime(dateObj, memo='以時間取數起卦') {
@@ -85,11 +85,13 @@ async function doPredictionByTime(dateObj, memo='以時間取數起卦') {
 	let shuDay = lunarData.lunarDayDigit;
 	let shuHour = shuHourMap[parseInt(curDate.format('HH'))];
 	//let yaoTu = shu8Map[(shuYear+shuMonth+shuDay+shuHour)%8] + shu8Map[(shuYear+shuMonth+shuDay)%8];
-	let yaoTu = ((8-(shuYear+shuMonth+shuDay+shuHour)%8)%8).toString(2).padStart(3,'0') + ((8-(shuYear+shuMonth+shuDay)%8)%8).toString(2).padStart(3,'0');  //由於易數是負數，其象是同餘的正數，因此無需查表。
+	//let yaoTu = ((8-(shuYear+shuMonth+shuDay+shuHour)%8)%8).toString(2).padStart(3,'0') + ((8-(shuYear+shuMonth+shuDay)%8)%8).toString(2).padStart(3,'0');  //由於易數是負數，其象是同餘的正數，因此無需查表。
+	//let yaoTu = (8-(shuYear+shuMonth+shuDay+shuHour)%8)%8*Math.pow(2,3) + (8-(shuYear+shuMonth+shuDay)%8)%8;
+	let yaoTu = Math.abs(-(shuYear+shuMonth+shuDay+shuHour)%8)*Math.pow(2,3) + Math.abs(-(shuYear+shuMonth+shuDay)%8);
 	//let yaoVar = yaoVarMap[((shuYear+shuMonth+shuDay+shuHour)%6)];  //查表最簡單
 	let yaoVar = 1 << (6-(shuYear+shuMonth+shuDay+shuHour)%6)%6;
 	//console.log(yaoTu);
-	return new Prediction(`北京時間 ${curDate.format()}\n${lunarData.chineseMonth}月${lunarData.chineseDay}日`,yaoTu,yaoVar,memo);
+	return new Prediction(`北京時間：${curDate.format()}\n農曆：${lunarData.lunarMonth}${lunarData.lunarDay}\n${lunarData.chineseMonth}月${lunarData.chineseDay}日`,yaoTu,yaoVar,memo);
 }
 
 /**
@@ -175,4 +177,9 @@ output:
 巳火父母ㄨ　　辰土兄弟⚊
 未土兄弟⚋　　寅木官鬼⚋
 
+```
+
+# mobile app
+```
+https://github.com/creatxrgithub/shu-var-app
 ```
