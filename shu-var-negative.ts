@@ -12,7 +12,7 @@ const shen6startAt = ['甲乙','丙丁','戊','己','庚辛','壬癸']; Object.f
 //爲了方便混合搜索定位，使用一維數組，不使用對象 {key:value} 或二維數組。
 const infoWuxingWidth = 5;
 //成數卽生數加五
-const infoWuxing = ['3','木','甲','乙','東','2','火','南','丙','丁','5','土','中','戊','己','4','金','西','庚','辛','1','水','北','壬','癸']; Object.freeze(infoWuxing);  // js 中，數據使用 Object.freeze() 函數禁止更改
+const infoWuxing = ['3','木','東','甲','乙','2','火','南','丙','丁','5','土','中','戊','己','4','金','西','庚','辛','1','水','北','壬','癸']; Object.freeze(infoWuxing);  // js 中，數據使用 Object.freeze() 函數禁止更改
 
 //const infoDizhiWidth = 3;
 //const infoDizhi = ['子','鼠','水','丑','牛','土','寅','虎','木','卯','兔','木','辰','龍','土','巳','蛇','火','午','馬','火','未','羊','土','申','猴','金','酉','雞','金','戌','狗','土','亥','豬','水']; Object.freeze(infoDizhi);
@@ -38,7 +38,7 @@ const infoBase8 = [  //數值左起爲低位（初爻）
 ];Object.freeze(infoBase8);
 
 const info64Width = 3;
-const info64 = [  //數值左起爲低位（初爻）
+const info64: (number|string)[] = [  //數值左起爲低位（初爻）
 	0b111111,'䷀','乾爲天',0b011111,'䷫','天風姤',0b001111,'䷠','天山遁',0b000111,'䷋','天地否',0b000011,'䷓','風地觀',0b000001,'䷖','山地剝',0b000101,'䷢','火地晉',0b111101,'䷍','火天大有',
 
 	0b001001,'䷳','艮爲山',0b101001,'䷕','山火賁',0b111001,'䷙','山天大畜',0b110001,'䷨','山澤損',0b110101,'䷥','火澤睽',0b110111,'䷉','天澤履',0b110011,'䷼','風澤中孚',0b001011,'䷴','風山漸',
@@ -84,9 +84,9 @@ function getListShen6(dayTiangan:string):string[] {
  * 由于數組是從零開始，所以上述公式改爲（地支+11-天干）%12-1
  * 或 （地支+10-天干）%12
  */
-function getXunkong(value:string):string {
-	if(value===null) return '';
-	let resultSub = dizhi.indexOf(value[1])-tiangan.indexOf(value[0]);  //沒有進行很嚴格的檢查
+function getXunkong(ganzhi:string):string {
+	if(ganzhi===null) return '';
+	let resultSub = dizhi.indexOf(ganzhi[1])-tiangan.indexOf(ganzhi[0]);  //沒有進行很嚴格的檢查
 	if((resultSub%2)!==0) return '干支有誤';
 
 	//let offset = (resultSub+11)%12-1;
@@ -139,13 +139,14 @@ function getOffset64(value:number|string):number {
  * 卽：let [a,b] = [val1,val2]; let {x,y} = {x:val1,y:val2};
  * 同樣的，析構賦値可以嵌套模擬
  */
-function getGroup(value:number):any {
+function getGroup(value:number): [string, string, number] {
 	for(let i=0; i<8; i++) {
 		let index = base8mask.indexOf(base8bits[i]^value);
 		if(index!==-1) {
-			return [info64[getOffset64(base8bits[i])+1], base8wuxing[i], index];
+			return [info64[getOffset64(base8bits[i])+1] as string, base8wuxing[i], index];
 		}
 	}
+	return ['','',-1];
 }
 
 /**
@@ -262,52 +263,52 @@ function getDetail6(bits6:number):string[] {
  * @memo: 備注，如問卜目的。
  */
 class Prediction {
-	time8: any;
+	time8: string;
 	original: number;
 	mask: number;
-	memo: any;
-	oooShu: any;
-	oooTu: any;
-	oooName: any;
-	ooo6: any;
-	oooVarShu: any;
-	oooVarTu: any;
-	oooVarName: any;
-	oooVar6: any;
+	memo: string[];
+	oooShu: number;
+	oooTu: string;
+	oooName: string;
+	ooo6: string[];
+	oooVarShu: number;
+	oooVarTu: string;
+	oooVarName: string;
+	oooVar6: string[];
 	oooShen6: string[];
-	group: any;
+	group: string;
 	groupWuxing: string;
 	offsetInGroup: number = -1;
 	shi: number = -1;
 	ying: number = -1;
 
-	//@original, @mask 僅接受 any 不接受 number|string
-	constructor(time8:string, original:any, mask:any, ...memo:string[]) {
+	//@original, @mask 僅接受 any 不接受 number|string, 解決方法：使用彊制轉換
+	constructor(time8:string, original:number|string, mask:number|string, ...memo:string[]) {
 		this.time8 = time8;
 		if(Number.isInteger(original)) {
-			this.original = 0b111111 & original;  //only types of: any, number, bigint, enum
+			this.original = 0b111111 & (original as number);  //only types of: any, number, bigint, enum
 		} else {
-			this.original = 0b111111 & parseInt(original,2);  //cannot be types of: string
+			this.original = 0b111111 & parseInt(original as string,2);  //cannot be types of: string
 		}
 		if(Number.isInteger(mask)) {
-			this.mask = 0b111111 & mask;
+			this.mask = 0b111111 & (mask as number);
 		} else {
-			this.mask = 0b111111 & parseInt(mask,2);
+			this.mask = 0b111111 & parseInt(mask as string,2);
 		}
-		this.memo = memo || '';
+		this.memo = memo || [];
 	}
 
 	getInfo() {
 		if((typeof this.time8)==='string') {
 			//取旬空
-			this.time8 += ' ' + getXunkong(this.time8.match(new RegExp(`[${tiangan}][${dizhi}]日`,'g')).toString());
-			this.oooShen6 = getListShen6(this.time8.match(new RegExp(`[${tiangan}][${dizhi}]日`,'g')).toString()[0]);
+			this.time8 += ' ' + getXunkong(this.time8.match(new RegExp(`[${tiangan}][${dizhi}]日`,'g'))!.toString());
+			this.oooShen6 = getListShen6(this.time8.match(new RegExp(`[${tiangan}][${dizhi}]日`,'g'))!.toString()[0]);
 		}
 		[this.group,this.groupWuxing,this.offsetInGroup] = getGroup(this.original);
 		[this.shi,this.ying] = base8shiying[this.offsetInGroup];  //世應
-		this.oooShu = info64[getOffset64(this.original)];
-		this.oooTu = info64[getOffset64(this.original)+1];
-		this.oooName = info64[getOffset64(this.original)+2];
+		this.oooShu = info64[getOffset64(this.original)] as number;
+		this.oooTu = info64[getOffset64(this.original)+1] as string;
+		this.oooName = info64[getOffset64(this.original)+2] as string;
 		this.ooo6 = getDetail6(this.original);
 		let w5 = getInfoWuxing(this.groupWuxing);
 		for(let i=0; i<=5; i++) {
@@ -322,9 +323,9 @@ class Prediction {
 //		this.ooo6[this.shi] += '世';		this.ooo6[this.ying] += '應';
 		if((0b111111&this.mask)===0) return this;  //無變爻
 		let var6 = changeBits(this.original,this.mask);
-		this.oooVarShu = info64[getOffset64(var6)];
-		this.oooVarTu = info64[getOffset64(var6)+1];
-		this.oooVarName = info64[getOffset64(var6)+2];
+		this.oooVarShu = info64[getOffset64(var6)] as number;
+		this.oooVarTu = info64[getOffset64(var6)+1] as string;
+		this.oooVarName = info64[getOffset64(var6)+2] as string;
 		this.oooVar6 = getDetail6(var6);
 		for(let i=0; i<=5; i++) {
 			switch(this.oooVar6[i][2]) {
@@ -391,5 +392,6 @@ class Prediction {
 	}
 }
 
-export = Prediction;
+export { Prediction };
+//export = Prediction;
 //export default Prediction;

@@ -1,4 +1,6 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Prediction = void 0;
 /**
  * 易數當以零（坤）爲始作減法，相應的數值爲零或負數（或其補碼，卽同餘的正數）。其牠進制的（如三進制的太玄經）同此。
  * 與 shu-var 的實現的區別在於01數字串：shu-var-negative 以左起爲低位（初爻），而 shu-var 以左起爲高位。
@@ -210,10 +212,10 @@ function getListShen6(dayTiangan) {
  * 由于數組是從零開始，所以上述公式改爲（地支+11-天干）%12-1
  * 或 （地支+10-天干）%12
  */
-function getXunkong(value) {
-    if (value === null)
+function getXunkong(ganzhi) {
+    if (ganzhi === null)
         return '';
-    var resultSub = dizhi.indexOf(value[1]) - tiangan.indexOf(value[0]); //沒有進行很嚴格的檢查
+    var resultSub = dizhi.indexOf(ganzhi[1]) - tiangan.indexOf(ganzhi[0]); //沒有進行很嚴格的檢查
     if ((resultSub % 2) !== 0)
         return '干支有誤';
     //let offset = (resultSub+11)%12-1;
@@ -269,6 +271,7 @@ function getGroup(value) {
             return [info64[getOffset64(base8bits[i]) + 1], base8wuxing[i], index];
         }
     }
+    return ['', '', -1];
 }
 /**
  * @bits6: 六爻的數值
@@ -415,7 +418,7 @@ function getDetail6(bits6) {
  * @memo: 備注，如問卜目的。
  */
 var Prediction = /** @class */ (function () {
-    //@original, @mask 僅接受 any 不接受 number|string
+    //@original, @mask 僅接受 any 不接受 number|string, 解決方法：使用彊制轉換
     function Prediction(time8, original, mask) {
         var memo = [];
         for (var _i = 3; _i < arguments.length; _i++) {
@@ -437,7 +440,7 @@ var Prediction = /** @class */ (function () {
         else {
             this.mask = 63 & parseInt(mask, 2);
         }
-        this.memo = memo || '';
+        this.memo = memo || [];
     }
     Prediction.prototype.getInfo = function () {
         var _a, _b;
@@ -569,5 +572,6 @@ var Prediction = /** @class */ (function () {
     };
     return Prediction;
 }());
-module.exports = Prediction;
+exports.Prediction = Prediction;
+//export = Prediction;
 //export default Prediction;

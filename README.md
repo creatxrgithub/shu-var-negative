@@ -23,12 +23,16 @@ npm install chinese-calendar-indexer
 
 code:
 
+~~const Prediction = require('shu-var-negative');~~
+**const { Prediction } = require('shu-var-negative');**
+
 ```
 /**
  * 只提供兩種起卦法：按中國北京時間起卦，指定時間及卦象與變爻起卦。
  * 定應期以中國北京時間爲準。
  */
-const Prediction = require('shu-var-negative');
+const { Prediction } = require('shu-var-negative');
+
 const CalendarIndexer = require('chinese-calendar-indexer');
 
 const moment = require('moment-timezone');
